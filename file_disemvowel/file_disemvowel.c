@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 #define BUF_SIZE 1024
 
@@ -21,14 +24,14 @@ int copy_non_vowels(int num_chars, char* in_buf, char* out_buf) {
      * and this function should return the number of non-vowels that
      * that were copied over.
      */
-	
-	for(int i = 0, k = 0; i < num_chars; i++) {
-                 if(!isVowel(in_buf[i])) {
+	int i,k;
+	for(i = 0, k = 0; i < num_chars; i++) {
+                 if(!is_vowel(in_buf[i])) {
                          out_buf[k] = in_buf[i];
                          k++;
                  }
          }
-         out_buf[num_chars + 1] = '\0';
+         out_buf[num_chars] = '\0';
 
         return k;
 }
@@ -40,10 +43,22 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
      * in a buffer of data, copy the non-vowels to the output buffer, and
      * use fwrite to write that out.
      */
-      char* in_buf;
-      char* out_buf;
+      char* in_buf = (char*) calloc(BUF_SIZE, sizeof(char));
+      char* out_buf = (char*) calloc(BUF_SIZE, sizeof(char));
 
-      fread(
+
+      //*********ask Nic about fread syntax
+
+
+
+       while (!feof(inputFile)) {
+        fread(in_buf, sizeof(char), (BUF_SIZE -1), inputFile);
+        in_buf[BUF_SIZE] = '\0';
+        copy_non_vowels(strlen(in_buf), in_buf, out_buf);
+        fwrite(out_buf, sizeof(char), BUF_SIZE, outputFile);
+      }
+      free(in_buf);
+      free(out_buf);
 }
 
 
@@ -51,13 +66,40 @@ int main(int argc, char *argv[]) {
     // You should set these to `stdin` and `stdout` by default
     // and then set them to user specified files when the user
     // provides files names as command line arguments.
-    FILE *inputFile;
-    FILE *outputFile;
+
+    FILE *inputFile = stdin;
+    FILE *outputFile = stdout;
 
     // Code that processes the command line arguments
     // and sets up inputFile and outputFile.
 
-    disemvowel(inputFile, outputFile);
+    //*******ask nic about fopen and using file ptrs****************
+//    inputFile = fopen(File, "r");
+//    outputFile = fopen(File, "w");// use argc to check how many arguments there are. if 1, if 2, if 3
+//argv[1]
 
-    return 0;
+//ask whats at arg0 and arg1 and arg2
+
+if (argc == 0) {
+disemvowel(inputFile, outputFile);
+}
+
+if (argc == 1) {
+inputFile = fopen(argv[0], "r");
+disemvowel(inputFile, outputFile);
+fclose(inputFile);
+}
+
+if (argc == 2) {
+inputFile = fopen(argv[0], "r");
+outputFile = fopen(argv[1], "w");
+disemvowel(inputFile, outputFile);
+fclose(inputFile);
+fclose(outputFile);
+}
+
+if (argc > 2) {
+printf("please specify 2 or less files\n");
+}
+
 }
