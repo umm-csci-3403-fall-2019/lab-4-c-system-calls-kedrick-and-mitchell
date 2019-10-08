@@ -46,16 +46,16 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
       char* in_buf = (char*) calloc(BUF_SIZE, sizeof(char));
       char* out_buf = (char*) calloc(BUF_SIZE, sizeof(char));
 
-
+int non_vowel_len;
+int read_size;
       //*********ask Nic about fread syntax
 
 
 
        while (!feof(inputFile)) {
-        fread(in_buf, sizeof(char), (BUF_SIZE -1), inputFile);
-        in_buf[BUF_SIZE] = '\0';
-        copy_non_vowels(strlen(in_buf), in_buf, out_buf);
-        fwrite(out_buf, sizeof(char), BUF_SIZE, outputFile);
+        read_size = fread(in_buf, sizeof(char), (BUF_SIZE), inputFile);
+        non_vowel_len = copy_non_vowels(read_size, in_buf, out_buf);
+        fwrite(out_buf, sizeof(char), non_vowel_len, outputFile);
       }
       free(in_buf);
       free(out_buf);
@@ -76,30 +76,27 @@ int main(int argc, char *argv[]) {
     //*******ask nic about fopen and using file ptrs****************
 //    inputFile = fopen(File, "r");
 //    outputFile = fopen(File, "w");// use argc to check how many arguments there are. if 1, if 2, if 3
-//argv[1]
 
-//ask whats at arg0 and arg1 and arg2
-
-if (argc == 0) {
-disemvowel(inputFile, outputFile);
+if (argc > 2 || argc < 1) {
+printf("please specify 2 or less files\n");
 }
 
 if (argc == 1) {
-inputFile = fopen(argv[0], "r");
 disemvowel(inputFile, outputFile);
-fclose(inputFile);
 }
 
 if (argc == 2) {
-inputFile = fopen(argv[0], "r");
-outputFile = fopen(argv[1], "w");
+inputFile = fopen(argv[1], "r");
+disemvowel(inputFile, outputFile);
+fclose(inputFile);
+}
+
+if (argc == 3) {
+inputFile = fopen(argv[1], "r");
+outputFile = fopen(argv[2], "w");
 disemvowel(inputFile, outputFile);
 fclose(inputFile);
 fclose(outputFile);
-}
-
-if (argc > 2) {
-printf("please specify 2 or less files\n");
 }
 
 }
