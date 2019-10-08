@@ -48,9 +48,6 @@ void disemvowel(FILE* inputFile, FILE* outputFile) {
 
 int non_vowel_len;
 int read_size;
-      //*********ask Nic about fread syntax
-
-
 
        while (!feof(inputFile)) {
         read_size = fread(in_buf, sizeof(char), (BUF_SIZE), inputFile);
