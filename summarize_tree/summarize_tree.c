@@ -63,6 +63,7 @@ void process_file(const char* path) {
   /*
    * Update the number of regular files.
    */
+	num_regulars++;
 }
 
 void process_path(const char* path) {
