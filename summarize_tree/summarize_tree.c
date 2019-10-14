@@ -16,6 +16,13 @@ bool is_dir(const char* path) {
    * return value from stat in case there is a problem, e.g., maybe the
    * the file doesn't actually exist.
    */
+	struct stat* buf = malloc(sizeOf(struct stat));
+	int fExists = stat(path, buf);
+	bool isDirectory = (S_ISDIR(buf->st_mode) && fExists == 0);
+
+	free(buf);
+
+	return isDirectory;
 }
 
 /* 
